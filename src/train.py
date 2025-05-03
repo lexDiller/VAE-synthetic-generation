@@ -2,21 +2,22 @@
 import torch
 from torch import optim
 from torch.utils.tensorboard import SummaryWriter
+import torch.nn.functional as F
 from tqdm import tqdm
 
 from dataset import get_dataloader
 from model import VAE
 
 data_path   = "data/images"
-img_size    = 64
+img_size    = (448, 544)
 batch_size  = 128
 lr          = 1e-3
-epochs      = 50
+epochs      = 200
 latent_dim  = 128
 device      = "cuda" if torch.cuda.is_available() else "cpu"
 
 loader = get_dataloader(data_path, img_size, batch_size)
-vae    = VAE(img_channels=3, feature_dim=32, latent_dim=latent_dim).to(device)
+vae    = VAE(img_channels=3, feature_dim=32, latent_dim=latent_dim, img_size=img_size).to(device)
 opt    = optim.Adam(vae.parameters(), lr=lr)
 tb     = SummaryWriter("runs/vae_experiment")
 
